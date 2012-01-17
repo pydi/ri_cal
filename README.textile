@@ -14,7 +14,7 @@ but do not support important things like enumerating occurrences of repeating ev
 This is a clean-slate implementation of RFC2445.A Google group for discussion of this library has been set up http://groups.google.com/group/rical_gem
 </p>
 
-<h1>FEATURES/PROBLEMS:<\h1>
+<h1>FEATURES/PROBLEMS:</h1>
 
 * All examples of recurring events in RFC 2445 are handled. RSpec examples are provided for them. 
 
@@ -78,7 +78,8 @@ will be passed as that argument</p>
       end
     end
    </code>
-As the example shows, the two styles can be mixed, the inner block which builds the alarm uses the
+
+<p>As the example shows, the two styles can be mixed, the inner block which builds the alarm uses the
 first style.
   
 The blocks are evaluated in the context of an object which builds the calendar or calendar
@@ -87,14 +88,14 @@ correspond to a property value setter of the object being built will cause that 
 to the component with the provided value.
 
 A method corresponding to the name of one of the components sub component will create the sub
-component and evaluate a block if given in the context of the new subcomponent.
+component and evaluate a block if given in the context of the new subcomponent.</p>
 
-==== Multiply occurring properties
+<h1>Multiply occurring properties</h1>
 
 Certain RFC Components have properties which may be specified multiple times, for example, an Event
 may have zero or more comment properties, A component will have a family of methods for
 building/manipulating such a property, e.g.
-
+<code>
 Event#comment::         will return an array of comment strings.
 Event#comment=::        takes a single comment string and gives the event a single comment property, 
                         replacing any existing comment property collection.
@@ -104,11 +105,11 @@ Event#add_comment::     takes a single comment string argument and adds a commen
 Event#add_comments::    takes multiple comment string arguments and adds a comment property for each.
 Event#remove_comment::  takes a single comment string argument and removes an existing comment property with that value.
 Event#remove_comments:: takes multiple comment string argument and removes an existing comment property with that value.
+</code>
 
+<h1>Times, Time zones, and Floating Times</h1>
 
-==== Times, Time zones, and Floating Times
-
-RFC2445 describes three different kinds of DATE-TIME values with respect to time zones:
+<p>RFC2445 describes three different kinds of DATE-TIME values with respect to time zones:
 
   1. date-times with a local time. These have no actual time zone, instead they are to be 
      interpreted in the local time zone of the viewer.  These floating times are used for things 
@@ -153,10 +154,11 @@ When the value of a DATE-TIME property is set to a value, the following processi
   * If the value is a Date it will be interpreted as that date
   * If the value is a Time, DateTime, or TimeWithZone then the tzid attribute will determine the
     time zone. If tzid returns nil then the default tzid will be used.
+</p>
   
-==== Default TZID
+<h1> Default TZID</h1>
 
-The PropertyValue::DateTime class has a default_tzid attribute which is initialized to "UTC".
+<p>The PropertyValue::DateTime class has a default_tzid attribute which is initialized to "UTC".
 
 The Component::Calendar class also has a default_tzid attribute, which may be set, but if it is not
 set the default_tzid of the PropertyValue::DateTime class will be used.
@@ -177,13 +179,14 @@ will be raised by the conversion method.
 To explicitly set a floating time you can use the method #with_floating_timezone on Time or
 DateTime instances as in
 
-   event.dtstart = Time.parse("1/1/2010 00:00:00").with_floating_timezone
+  <code>event.dtstart = Time.parse("1/1/2010 00:00:00").with_floating_timezone</code>
    
 or the equivalent
 
-event.dtstart = Time.parse("1/1/2010 00:00:00").set_tzid(:floating)
+<code>event.dtstart = Time.parse("1/1/2010 00:00:00").set_tzid(:floating)</code>
+</p>
 
-=== RiCal produced Calendars and Tzinfo
+<h1> RiCal produced Calendars and Tzinfo</h1>
 
 Calendars created by the RiCal Builder DSL use TZInfo as a source of time zone definition
 information. RFC 2445 does not specify standard names for time zones, so each time zone identifier
@@ -201,9 +204,9 @@ tzids will be resolved using the included VTIMEZONEs. Note that these calendars 
 which are not recognizable by the tzinfo gem or by the similar code provided by ActiveSupport,
 so care is needed in using them.
 
-=== Ruby values of DATETIME properties
+<h1> Ruby values of DATETIME properties</h1>
 
-The result of accessing the value of a DATETIME property (e.g. event.dtstart) depends on several
+<p>The result of accessing the value of a DATETIME property (e.g. event.dtstart) depends on several
 factors:
 
  * If the property has a DATE value, then the result will be a Ruby Date object.
@@ -218,28 +221,30 @@ factors:
 
  * Finally, if the value is attached to a property contained in a tzinfo calendar and the
    ActiveSupport gem is loaded, then the result will be an ActiveSupport::TimeWithZone with the 
-   proper tzid.
+   proper tzid.</p>
    
-==== RDATE, and EXDATE properties (Occurrence Lists)
-
+<h1>RDATE, and EXDATE properties (Occurrence Lists)</h1>
+<p>
 A calendar component which supports recurrence properties (e.g. Event) may have zero or more RDATE
 and or EXDATE properties. Each RDATE/EXDATE property in turn specifies one or more occurrences to
 be either added to or removed from the component's recurrence list. Each element of the list may be
 either a DATE, a DATETIME, or a PERIOD, or the RFC 2445 string representation of one of these:
 
+  <code>
   event.rdate = "20090305"
   event.rdate = "20090305T120000"
   event.rdate = "20090305T120000/P1H30M"
+  </code>
   
 It can also have multiple occurrences, specified as multiple parameters:
-
+  <code>
   event.rdate = "20090305T120000", "20090405T120000"
   event.rdate = DateTime.parse("12 December, 2005 3:00 pm"), DateTime.civil(2001, 3, 4, 15, 30, 0)
-  
+  </code>
 
 Multiple string values can be combined separated by commas:
 
-   event.rdate = "20090305T120000,20090405T120000"
+  <code>event.rdate = "20090305T120000,20090405T120000"</code>
 
 
 An occurrence list has one set of parameters, so only one timezone can be used, the timezone may
@@ -247,9 +252,10 @@ be set explicitly via the first argument.  If the first argument is a string, it
 commas. Then if the first segment (up to the first comma if any) is not a valid RFC 2445
 representation of a DATE, DATETIME, or PERIOD, then it will be used as the timezone for the
 occurrence list. Otherwise the arguments must have the same time zone or an InvalidPropertyValue
-error will be raised.
-=== Parsing
+error will be raised.</p>
 
+<h1> Parsing</h1>
+<p>
 RiCal can parse icalendar data from either a string or a Ruby io object.
 
 The data may consist of one or more icalendar calendars, or one or more icalendar components (e.g.
@@ -302,7 +308,7 @@ In either case the result will be an array of components.
 As already stated the string argument may be a full icalendar format calendar, or just one or more subcomponents, e.g.
 
 RiCal.parse_string("BEGIN:VEVENT\nDTSTART;TZID=US/Eastern:20090224T090000\nSUMMARY:Test Event\nDTEND;TZID=US/Eastern:20090224T100000\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=20090228T045959Z\nEND:VEVENT")
-
+</p>
 ==== From an Io
 	File.open("path/to/file", "r") do |file|
 	    components = RiCal.parse(file)
