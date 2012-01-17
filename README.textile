@@ -1,29 +1,28 @@
-<h1>RI_CAL </h1>
-<p> RI_CAL -- a new implementation of RFC2445 in Ruby
-http://ri-cal.rubyforge.org/
+h1. RI_CAL
 
+RI_CAL -- a new implementation of RFC2445 in Ruby http://ri-cal.rubyforge.org/
     by Rick DeNatale
-</p>
-<h1> DESCRIPTION:</h1>
-<p>
+
+h1. Description
+
 A new Ruby implementation of RFC2445 iCalendar.
 
 The existing Ruby iCalendar libraries (e.g. icalendar, vpim) provide for parsing and generating icalendar files,
 but do not support important things like enumerating occurrences of repeating events.
 
 This is a clean-slate implementation of RFC2445.A Google group for discussion of this library has been set up http://groups.google.com/group/rical_gem
-</p>
 
-<h1>FEATURES/PROBLEMS:</h1>
+
+h1. FEATURES/PROBLEMS:
 
 * All examples of recurring events in RFC 2445 are handled. RSpec examples are provided for them. 
 
-<h1>SYNOPSIS:</h1>
+h1. SYNOPSIS:
 
 For the full RDOC see http://ri-cal.rubyforge.org/rdoc/
 
-<h1>Components and properties</h1>
-<p>
+h1. Components and properties
+
 An iCalendar calendar comprises subcomponents like Events, Timezones and Todos. Each component may
 have properties, for example an event has a dtstart property which defines the time (and date) on
 which the event starts.
@@ -36,12 +35,12 @@ return a DateTime or Date object when queried.
 The methods for accessing the properties of each type of component are defined in a module with the
 same name as the component class in the RiCal::properties module. For example the property
 accessing methods for RiCal::Component::Event are defined in RiCal::Properties::Event
-</p>
 
-<h1> Creating Calendars and Calendar Components <h1>
+h1. Creating Calendars and Calendar Components
 
-<p>RiCal provides a builder DSL for creating calendars and calendar components. An example</p>
-   <code>
+RiCal provides a builder DSL for creating calendars and calendar components. An example
+
+   <pre>
     RiCal.Calendar do
        event do
          description "MA-6 First US Manned Spaceflight"
@@ -54,17 +53,18 @@ accessing methods for RiCal::Component::Event are defined in RiCal::Properties::
        end
      end
    end
-  </code>
-<p>This style is for compatibility with the iCalendar and vpim to ease migration. The downside is that
+  </pre>
+
+This style is for compatibility with the iCalendar and vpim to ease migration. The downside is that
 the block is evaluated in the context of a different object which can cause surprises if the block
 contains direct instance variable references or implicit references to self. Note that, in this
 style, one must use 'declarative' method calls like dtstart to set values rather than more natural
 attribute writer methods, like dtstart=
   
 Alternatively you can pass a block with a single argument, in this case the component being built
-will be passed as that argument</p>
+will be passed as that argument
 
-   <code>
+   <pre>
     RiCal.Calendar do |cal|
       cal.event do |event|
         event.description = "MA-6 First US Manned Spaceflight"
@@ -77,7 +77,7 @@ will be passed as that argument</p>
         end
       end
     end
-   </code>
+   </pre>
 
 <p>As the example shows, the two styles can be mixed, the inner block which builds the alarm uses the
 first style.
@@ -90,12 +90,13 @@ to the component with the provided value.
 A method corresponding to the name of one of the components sub component will create the sub
 component and evaluate a block if given in the context of the new subcomponent.</p>
 
-<h1>Multiply occurring properties</h1>
+h1. Multiply occurring properties
 
 Certain RFC Components have properties which may be specified multiple times, for example, an Event
 may have zero or more comment properties, A component will have a family of methods for
 building/manipulating such a property, e.g.
-<code>
+
+<pre>
 Event#comment::         will return an array of comment strings.
 Event#comment=::        takes a single comment string and gives the event a single comment property, 
                         replacing any existing comment property collection.
@@ -105,7 +106,7 @@ Event#add_comment::     takes a single comment string argument and adds a commen
 Event#add_comments::    takes multiple comment string arguments and adds a comment property for each.
 Event#remove_comment::  takes a single comment string argument and removes an existing comment property with that value.
 Event#remove_comments:: takes multiple comment string argument and removes an existing comment property with that value.
-</code>
+</pre>
 
 <h1>Times, Time zones, and Floating Times</h1>
 
