@@ -40,20 +40,20 @@ h1. Creating Calendars and Calendar Components
 
 RiCal provides a builder DSL for creating calendars and calendar components. An example
 
-   <pre>
-    RiCal.Calendar do
-       event do
-         description "MA-6 First US Manned Spaceflight"
-         dtstart     DateTime.parse("2/20/1962 14:47:39")
-         dtend       DateTime.parse("2/20/1962 19:43:02")
-         location    "Cape Canaveral"
-         add_attendee "john.glenn@nasa.gov"
-         alarm do
-         description "Segment 51"
-       end
-     end
-   end
-  </pre>
+<pre>
+  RiCal.Calendar do
+    event do
+      description "MA-6 First US Manned Spaceflight"
+      dtstart     DateTime.parse("2/20/1962 14:47:39")
+      dtend       DateTime.parse("2/20/1962 19:43:02")
+      location    "Cape Canaveral"
+      add_attendee "john.glenn@nasa.gov"
+      alarm do
+        description "Segment 51"
+      end
+    end
+  end
+</pre>
 
 This style is for compatibility with the iCalendar and vpim to ease migration. The downside is that
 the block is evaluated in the context of a different object which can cause surprises if the block
@@ -64,22 +64,22 @@ attribute writer methods, like dtstart=
 Alternatively you can pass a block with a single argument, in this case the component being built
 will be passed as that argument
 
-   <pre>
-    RiCal.Calendar do |cal|
-      cal.event do |event|
-        event.description = "MA-6 First US Manned Spaceflight"
-        event.dtstart =  DateTime.parse("2/20/1962 14:47:39")
-        event.dtend = DateTime.parse("2/20/1962 19:43:02")
-        event.location = "Cape Canaveral"
-        event.add_attendee "john.glenn@nasa.gov"
-        event.alarm do
-          description "Segment 51"
-        end
+<pre>
+  RiCal.Calendar do |cal|
+    cal.event do |event|
+      event.description = "MA-6 First US Manned Spaceflight"
+      event.dtstart =  DateTime.parse("2/20/1962 14:47:39")
+      event.dtend = DateTime.parse("2/20/1962 19:43:02")
+      event.location = "Cape Canaveral"
+      event.add_attendee "john.glenn@nasa.gov"
+      event.alarm do
+        description "Segment 51"
       end
     end
-   </pre>
+  end
+</pre>
 
-<p>As the example shows, the two styles can be mixed, the inner block which builds the alarm uses the
+As the example shows, the two styles can be mixed, the inner block which builds the alarm uses the
 first style.
   
 The blocks are evaluated in the context of an object which builds the calendar or calendar
@@ -88,7 +88,7 @@ correspond to a property value setter of the object being built will cause that 
 to the component with the provided value.
 
 A method corresponding to the name of one of the components sub component will create the sub
-component and evaluate a block if given in the context of the new subcomponent.</p>
+component and evaluate a block if given in the context of the new subcomponent.
 
 h1. Multiply occurring properties
 
@@ -108,9 +108,9 @@ Event#remove_comment::  takes a single comment string argument and removes an ex
 Event#remove_comments:: takes multiple comment string argument and removes an existing comment property with that value.
 </pre>
 
-<h1>Times, Time zones, and Floating Times</h1>
+h1. Times, Time zones, and Floating Times
 
-<p>RFC2445 describes three different kinds of DATE-TIME values with respect to time zones:
+RFC2445 describes three different kinds of DATE-TIME values with respect to time zones:
 
   1. date-times with a local time. These have no actual time zone, instead they are to be 
      interpreted in the local time zone of the viewer.  These floating times are used for things 
@@ -155,11 +155,10 @@ When the value of a DATE-TIME property is set to a value, the following processi
   * If the value is a Date it will be interpreted as that date
   * If the value is a Time, DateTime, or TimeWithZone then the tzid attribute will determine the
     time zone. If tzid returns nil then the default tzid will be used.
-</p>
-  
-<h1> Default TZID</h1>
+ 
+h1. Default TZID
 
-<p>The PropertyValue::DateTime class has a default_tzid attribute which is initialized to "UTC".
+The PropertyValue::DateTime class has a default_tzid attribute which is initialized to "UTC".
 
 The Component::Calendar class also has a default_tzid attribute, which may be set, but if it is not
 set the default_tzid of the PropertyValue::DateTime class will be used.
@@ -180,14 +179,13 @@ will be raised by the conversion method.
 To explicitly set a floating time you can use the method #with_floating_timezone on Time or
 DateTime instances as in
 
-  <code>event.dtstart = Time.parse("1/1/2010 00:00:00").with_floating_timezone</code>
+<pre>event.dtstart = Time.parse("1/1/2010 00:00:00").with_floating_timezone</pree>
    
 or the equivalent
 
-<code>event.dtstart = Time.parse("1/1/2010 00:00:00").set_tzid(:floating)</code>
-</p>
+<pre>event.dtstart = Time.parse("1/1/2010 00:00:00").set_tzid(:floating)</pre>
 
-<h1> RiCal produced Calendars and Tzinfo</h1>
+h1. RiCal produced Calendars and Tzinfo
 
 Calendars created by the RiCal Builder DSL use TZInfo as a source of time zone definition
 information. RFC 2445 does not specify standard names for time zones, so each time zone identifier
@@ -205,9 +203,9 @@ tzids will be resolved using the included VTIMEZONEs. Note that these calendars 
 which are not recognizable by the tzinfo gem or by the similar code provided by ActiveSupport,
 so care is needed in using them.
 
-<h1> Ruby values of DATETIME properties</h1>
+h1. Ruby values of DATETIME properties
 
-<p>The result of accessing the value of a DATETIME property (e.g. event.dtstart) depends on several
+The result of accessing the value of a DATETIME property (e.g. event.dtstart) depends on several
 factors:
 
  * If the property has a DATE value, then the result will be a Ruby Date object.
@@ -224,28 +222,28 @@ factors:
    ActiveSupport gem is loaded, then the result will be an ActiveSupport::TimeWithZone with the 
    proper tzid.</p>
    
-<h1>RDATE, and EXDATE properties (Occurrence Lists)</h1>
-<p>
+h1. RDATE, and EXDATE properties (Occurrence Lists)
+
 A calendar component which supports recurrence properties (e.g. Event) may have zero or more RDATE
 and or EXDATE properties. Each RDATE/EXDATE property in turn specifies one or more occurrences to
 be either added to or removed from the component's recurrence list. Each element of the list may be
 either a DATE, a DATETIME, or a PERIOD, or the RFC 2445 string representation of one of these:
 
-  <code>
-  event.rdate = "20090305"
-  event.rdate = "20090305T120000"
-  event.rdate = "20090305T120000/P1H30M"
-  </code>
+  <pre>
+    event.rdate = "20090305"
+    event.rdate = "20090305T120000"
+    event.rdate = "20090305T120000/P1H30M"
+  </pre>
   
 It can also have multiple occurrences, specified as multiple parameters:
-  <code>
-  event.rdate = "20090305T120000", "20090405T120000"
-  event.rdate = DateTime.parse("12 December, 2005 3:00 pm"), DateTime.civil(2001, 3, 4, 15, 30, 0)
-  </code>
+  <pre>
+    event.rdate = "20090305T120000", "20090405T120000"
+    event.rdate = DateTime.parse("12 December, 2005 3:00 pm"), DateTime.civil(2001, 3, 4, 15, 30, 0)
+  </pre>
 
 Multiple string values can be combined separated by commas:
 
-  <code>event.rdate = "20090305T120000,20090405T120000"</code>
+  <pre>event.rdate = "20090305T120000,20090405T120000"</pre>
 
 
 An occurrence list has one set of parameters, so only one timezone can be used, the timezone may
@@ -255,15 +253,17 @@ representation of a DATE, DATETIME, or PERIOD, then it will be used as the timez
 occurrence list. Otherwise the arguments must have the same time zone or an InvalidPropertyValue
 error will be raised.</p>
 
-<h1> Parsing</h1>
-<p>
+h1. Parsing
+
 RiCal can parse icalendar data from either a string or a Ruby io object.
 
 The data may consist of one or more icalendar calendars, or one or more icalendar components (e.g.
 one or more VEVENT, or VTODO objects.)
 
 In either case the result will be an array of components.
+
 ==== From a string
+     <pre>
 	RiCal.parse_string <<ENDCAL
 	BEGIN:VCALENDAR
 	X-WR-TIMEZONE:America/New_York
@@ -303,19 +303,25 @@ In either case the result will be an array of components.
 	END:VEVENT
 	END:VCALENDAR
 	ENDCAL
+      </pre>
 
 <b>Beware of the initial whitespace in the above example which is for rdoc formatting.</b> The parser does not strip initial whitespace from lines in the file and will fail.
 
 As already stated the string argument may be a full icalendar format calendar, or just one or more subcomponents, e.g.
 
-RiCal.parse_string("BEGIN:VEVENT\nDTSTART;TZID=US/Eastern:20090224T090000\nSUMMARY:Test Event\nDTEND;TZID=US/Eastern:20090224T100000\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=20090228T045959Z\nEND:VEVENT")
-</p>
-==== From an Io
-	File.open("path/to/file", "r") do |file|
-	    components = RiCal.parse(file)
-	end
+<pre>
+  RiCal.parse_string("BEGIN:VEVENT\nDTSTART;TZID=US/Eastern:20090224T090000\nSUMMARY:Test Event\nDTEND;TZID=US/Eastern:20090224T100000\nRRULE:FREQ=DAILY;INTERVAL=1;UNTIL=20090228T045959Z\nEND:VEVENT")
+</pre>
 
-=== Occurrence Enumeration
+h1. From an Io
+
+<pre>
+  File.open("path/to/file", "r") do |file|
+    components = RiCal.parse(file)
+  end
+</pre>
+
+h1. Occurrence Enumeration
 
 Event, Journal, and Todo components can have recurrences which are defined following the RFC 2445 specification.
 A component with recurrences can enumerate those occurrences.
