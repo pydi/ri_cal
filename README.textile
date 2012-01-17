@@ -1,27 +1,28 @@
-== RI_CAL -- a new implementation of RFC2445 in Ruby
+<h1>RI_CAL </h1>
+<p> RI_CAL -- a new implementation of RFC2445 in Ruby
 http://ri-cal.rubyforge.org/
 
     by Rick DeNatale
-<h1>== DESCRIPTION:</h1>
+</p>
+<h1> DESCRIPTION:</h1>
 <p>
 A new Ruby implementation of RFC2445 iCalendar.
 
 The existing Ruby iCalendar libraries (e.g. icalendar, vpim) provide for parsing and generating icalendar files,
 but do not support important things like enumerating occurrences of repeating events.
 
-This is a clean-slate implementation of RFC2445.
-
-A Google group for discussion of this library has been set up http://groups.google.com/group/rical_gem
+This is a clean-slate implementation of RFC2445.A Google group for discussion of this library has been set up http://groups.google.com/group/rical_gem
 </p>
-== FEATURES/PROBLEMS:
+
+<h1>FEATURES/PROBLEMS:<\h1>
 
 * All examples of recurring events in RFC 2445 are handled. RSpec examples are provided for them. 
 
-== SYNOPSIS:
+<h1>SYNOPSIS:</h1>
 
 For the full RDOC see http://ri-cal.rubyforge.org/rdoc/
 
-=== Components and properties
+<h1>Components and properties</h1>
 <p>
 An iCalendar calendar comprises subcomponents like Events, Timezones and Todos. Each component may
 have properties, for example an event has a dtstart property which defines the time (and date) on
@@ -36,45 +37,47 @@ The methods for accessing the properties of each type of component are defined i
 same name as the component class in the RiCal::properties module. For example the property
 accessing methods for RiCal::Component::Event are defined in RiCal::Properties::Event
 </p>
-=== Creating Calendars and Calendar Components
 
-RiCal provides a builder DSL for creating calendars and calendar components. An example
+<h1> Creating Calendars and Calendar Components <h1>
 
-  RiCal.Calendar do
-    event do
-      description "MA-6 First US Manned Spaceflight"
-      dtstart     DateTime.parse("2/20/1962 14:47:39")
-      dtend       DateTime.parse("2/20/1962 19:43:02")
-      location    "Cape Canaveral"
-      add_attendee "john.glenn@nasa.gov"
-      alarm do
-        description "Segment 51"
-      end
-    end
-  end
-  
-This style is for compatibility with the iCalendar and vpim to ease migration. The downside is that
+<p>RiCal provides a builder DSL for creating calendars and calendar components. An example</p>
+   <code>
+    RiCal.Calendar do
+       event do
+         description "MA-6 First US Manned Spaceflight"
+         dtstart     DateTime.parse("2/20/1962 14:47:39")
+         dtend       DateTime.parse("2/20/1962 19:43:02")
+         location    "Cape Canaveral"
+         add_attendee "john.glenn@nasa.gov"
+         alarm do
+         description "Segment 51"
+       end
+     end
+   end
+  </code>
+<p>This style is for compatibility with the iCalendar and vpim to ease migration. The downside is that
 the block is evaluated in the context of a different object which can cause surprises if the block
 contains direct instance variable references or implicit references to self. Note that, in this
 style, one must use 'declarative' method calls like dtstart to set values rather than more natural
 attribute writer methods, like dtstart=
   
 Alternatively you can pass a block with a single argument, in this case the component being built
-will be passed as that argument
+will be passed as that argument</p>
 
-  RiCal.Calendar do |cal|
-    cal.event do |event|
-      event.description = "MA-6 First US Manned Spaceflight"
-      event.dtstart =  DateTime.parse("2/20/1962 14:47:39")
-      event.dtend = DateTime.parse("2/20/1962 19:43:02")
-      event.location = "Cape Canaveral"
-      event.add_attendee "john.glenn@nasa.gov"
-      event.alarm do
-        description "Segment 51"
+   <code>
+    RiCal.Calendar do |cal|
+      cal.event do |event|
+        event.description = "MA-6 First US Manned Spaceflight"
+        event.dtstart =  DateTime.parse("2/20/1962 14:47:39")
+        event.dtend = DateTime.parse("2/20/1962 19:43:02")
+        event.location = "Cape Canaveral"
+        event.add_attendee "john.glenn@nasa.gov"
+        event.alarm do
+          description "Segment 51"
+        end
       end
     end
-  end
-
+   </code>
 As the example shows, the two styles can be mixed, the inner block which builds the alarm uses the
 first style.
   
